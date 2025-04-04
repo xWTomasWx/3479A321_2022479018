@@ -107,11 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      persistentFooterButtons: [
-        TextButton(onPressed: _incrementCounter, child: Icon(Icons.exposure_plus_1)),
-        TextButton(onPressed: _decrementCounter, child: Icon(Icons.exposure_minus_1)),
-        TextButton(onPressed: _resetCounter, child: Icon(Icons.settings_backup_restore_rounded))
-      ],
+      persistentFooterButtons: botonesAbajo,
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -145,5 +141,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add_task_outlined),
       ),*/ // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  List<Widget> get botonesAbajo {
+    return [
+      TextButton(onPressed: _incrementCounter, child: Icon(Icons.exposure_plus_1)),
+      TextButton(onPressed: _decrementCounter, child: Icon(Icons.exposure_minus_1)),
+      TextButton(onPressed: _resetCounter, child: Icon(Icons.settings_backup_restore_rounded))
+    ];
   }
 }
