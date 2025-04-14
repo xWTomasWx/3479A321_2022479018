@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+        fontFamily: 'Pokemon'
       ),
       home: const MyHomePage(title: 'Laboratorio 3 Demo Home Page'),
     );
@@ -91,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    String assetName = "assets/icons/check.svg";
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -127,6 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SvgPicture.asset(
+              assetName,
+              semanticsLabel: 'Icono',
+            ),
             const Text('Has presionado el boton esta cantidad de veces:'),
             Text(
               '$_counter',
