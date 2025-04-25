@@ -44,22 +44,73 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      persistentFooterButtons: botonesAbajo,
+      //persistentFooterButtons: botonesAbajo,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              assetName,
-              semanticsLabel: 'Icono',
+        child: Card(
+
+          elevation: 8,
+          color: Colors.greenAccent,
+          child:SizedBox(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('Flutter'),
+                  const SizedBox(height: 20,),
+                  SvgPicture.asset(
+                    assetName,
+                    semanticsLabel: 'Icono',
+                  ),
+                  const Text('Has presionado el boton esta cantidad de veces:'),
+                  Text(
+                    '$_counter',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: _incrementCounter,
+                        child: Icon(Icons.exposure_plus_1),
+                      ),
+                      SizedBox(width: 20,),
+                      ElevatedButton(
+                        onPressed: _decrementCounter,
+                        child: Icon(Icons.exposure_minus_1),
+                      ),
+                      SizedBox(width: 20,),
+                      ElevatedButton(
+                        onPressed: _resetCounter,
+                        child: Icon(Icons.settings_backup_restore_rounded),
+                      ),
+                    ],
+                  ),
+                ],
+                
+              ),
             ),
-            const Text('Has presionado el boton esta cantidad de veces:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+            /*child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SvgPicture.asset(
+                  assetName,
+                  semanticsLabel: 'Icono',
+                ),
+                const Text('Has presionado el boton esta cantidad de veces:'),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ],
+              
+            ),*/
+            
+          ),
+          
         ),
+        
       ),
     );
   }

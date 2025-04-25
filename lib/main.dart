@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
     logger.d("Logger is working!");
     
     return MaterialApp(
-      title: 'Laboratorio 3',
+      title: 'Laboratorio',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         fontFamily: 'Pokemon'
       ),
-      home: const MyHomePage(title: 'Laboratorio 3 Demo Home Page'),
+      home: const MyHomePage(title: 'Laboratorio Demo Home Page'),
     );
   }
 }
