@@ -36,4 +36,8 @@ flutter:
       fonts:
         - asset: assets/fonts/Pokemon Hollow.ttf
         - asset: assets/fonts/Pokemon Solid.ttf
+    - family: Comic
+      fonts:
+        - asset: assets/fonts/Hey Comic.ttf
+
  

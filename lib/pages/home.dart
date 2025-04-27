@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
+import 'package:application_laboratorio/pages/list_content.dart';
+import 'package:application_laboratorio/pages/about.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -33,6 +35,20 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _navigateCounter(){
+    if(_counter % 2 == 0){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ListContent()),
+      );
+    }else{
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const About()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var logger = Logger();
@@ -44,20 +60,72 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      //persistentFooterButtons: botonesAbajo,
+      persistentFooterButtons: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: (){
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const ListContent()),
+                );
+              }, 
+              child: const Text('Lista'),
+            ),
+            SizedBox(),  
+          ],
+        ),
+      ],
       body: Center(
-        child: Card(
-
-          elevation: 8,
-          color: Colors.greenAccent,
-          child:SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Card(
+            elevation: 8,
+            color: Colors.greenAccent,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    const Text('Flutter es un framework de código abierto creado por Google, utilizado para desarrollar aplicaciones multiplataforma (móviles, web, de escritorio e integradas) desde una única base de código. Este framework es conocido por su facilidad de desarrollo, rendimiento y capacidad de crear interfaces de usuario personalizadas y atractivas.'),
+                    SvgPicture.asset(
+                      assetName,
+                      semanticsLabel: 'Icono',
+                    ),
+                    const Text('Has presionado el boton esta cantidad de veces:'),
+                    Text(
+                      '$_counter',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: _incrementCounter,
+                          child: Icon(Icons.exposure_plus_1),
+                        ),
+                        ElevatedButton(
+                          onPressed: _decrementCounter,
+                          child: Icon(Icons.exposure_minus_1),
+                        ),
+                        ElevatedButton(
+                          onPressed: _resetCounter,
+                          child: Icon(Icons.settings_backup_restore_rounded),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: _navigateCounter, 
+                      child: const Text('Ir'),
+                    ),
+                  ],
+                  
+                ),
+              ),
+              /*child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text('Flutter'),
-                  const SizedBox(height: 20,),
                   SvgPicture.asset(
                     assetName,
                     semanticsLabel: 'Icono',
@@ -67,50 +135,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     '$_counter',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  SizedBox(height: 20,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: _incrementCounter,
-                        child: Icon(Icons.exposure_plus_1),
-                      ),
-                      SizedBox(width: 20,),
-                      ElevatedButton(
-                        onPressed: _decrementCounter,
-                        child: Icon(Icons.exposure_minus_1),
-                      ),
-                      SizedBox(width: 20,),
-                      ElevatedButton(
-                        onPressed: _resetCounter,
-                        child: Icon(Icons.settings_backup_restore_rounded),
-                      ),
-                    ],
-                  ),
                 ],
                 
-              ),
-            ),
-            /*child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SvgPicture.asset(
-                  assetName,
-                  semanticsLabel: 'Icono',
-                ),
-                const Text('Has presionado el boton esta cantidad de veces:'),
-                Text(
-                  '$_counter',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-              ],
+              ),*/
               
-            ),*/
+            
             
           ),
-          
         ),
-        
       ),
     );
   }

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Laboratorio',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
-        fontFamily: 'Pokemon'
+        fontFamily: 'Comic',
       ),
       home: const MyHomePage(title: 'Laboratorio Demo Home Page'),
     );
