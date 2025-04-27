@@ -19,7 +19,13 @@ class ListContent extends StatelessWidget{
       persistentFooterButtons: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
+          children: <Widget>[    
+            ElevatedButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              child: const Text('Volver')
+            ),
             ElevatedButton(
               onPressed: (){
                 Navigator.push(
@@ -29,12 +35,6 @@ class ListContent extends StatelessWidget{
               },
               child: const Text('Sobre')
             ),
-            ElevatedButton(
-              onPressed: (){
-                Navigator.pop(context);
-              },
-              child: const Text('Volver')
-            )
           ],
         )
       ],
