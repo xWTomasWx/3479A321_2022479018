@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logger/logger.dart';
 import 'package:application_laboratorio/pages/list_content.dart';
 import 'package:application_laboratorio/pages/about.dart';
-
+import 'package:application_laboratorio/provider/app_data.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -11,13 +11,61 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() {
+    print("Create state");
+    return _MyHomePageState();
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  //int _counter = 0;
+  _MyHomePageState() {
+    print("Constructor, Mounted: $mounted");
+  }
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    print("initState(), Mounted: $mounted");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("didChangeDependencies(), Mounted: $mounted");
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    print("setState()");
+    super.setState(fn);
+  }
+
+  @override
+  void didUpdateWidget(covariant MyHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("didUpdateWidget(), Mounted: $mounted");
+  }
+
+  @override
+  void deactivate() {
+    print("deactivate(), Mounted: $mounted");
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    print("dispose(), Mounted: $mounted");
+    super.dispose();
+  }
+
+  @override
+  void reassemble() {
+    print("reassemble(), Mounted: $mounted");
+    super.reassemble();
+  }
+
+  /*void _incrementCounter() {
     setState(() {
       _counter++;
     });
@@ -33,15 +81,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter = 0;
     });
-  }
+  }*/
 
-  void _navigateCounter(){
-    if(_counter % 2 == 0){
+  void _navigateCounter() {
+    if (context.read<AppData>().counter % 2 == 0) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ListContent()),
       );
-    }else{
+    } else {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const About()),
@@ -51,13 +99,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var logger = Logger();
-    logger.d("Logger is working!");
+    print("build");
+    //var logger = Logger();
+    //logger.d("Logger is working!");
     String assetName = "assets/icons/check.svg";
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.greenAccent[400],
         title: Text(widget.title),
       ),
       persistentFooterButtons: [
@@ -65,15 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             ElevatedButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.push(
-                  context, 
+                  context,
                   MaterialPageRoute(builder: (context) => const ListContent()),
                 );
-              }, 
+              },
               child: const Text('Lista'),
             ),
-            SizedBox(),  
+            SizedBox(),
           ],
         ),
       ],
@@ -83,47 +132,51 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Card(
             elevation: 8,
             color: Colors.greenAccent,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    const Text('Flutter es un framework de código abierto creado por Google, utilizado para desarrollar aplicaciones multiplataforma (móviles, web, de escritorio e integradas) desde una única base de código. Este framework es conocido por su facilidad de desarrollo, rendimiento y capacidad de crear interfaces de usuario personalizadas y atractivas.'),
-                    SvgPicture.asset(
-                      assetName,
-                      semanticsLabel: 'Icono',
-                    ),
-                    const Text('Has presionado el boton esta cantidad de veces:'),
-                    Text(
-                      '$_counter',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text(
+                    'Usuario: ${context.watch<AppData>().username}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const Text(
+                    'Flutter es un framework de código abierto creado por Google, utilizado para desarrollar aplicaciones multiplataforma (móviles, web, de escritorio e integradas) desde una única base de código. Este framework es conocido por su facilidad de desarrollo, rendimiento y capacidad de crear interfaces de usuario personalizadas y atractivas.',
+                  ),
+                  SvgPicture.asset(assetName, semanticsLabel: 'Icono'),
+                  const Text('Has presionado el boton esta cantidad de veces:'),
+                  Text(
+                    '${context.watch<AppData>().counter}',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: context.read<AppData>().incrementCounter,
+                        child: Icon(Icons.exposure_plus_1),
+                      ),
+                      ElevatedButton(
+                        onPressed: context.read<AppData>().decrementCounter,
+                        child: Icon(Icons.exposure_minus_1),
+                      ),
+                      if (context.watch<AppData>().enableReset)
                         ElevatedButton(
-                          onPressed: _incrementCounter,
-                          child: Icon(Icons.exposure_plus_1),
-                        ),
-                        ElevatedButton(
-                          onPressed: _decrementCounter,
-                          child: Icon(Icons.exposure_minus_1),
-                        ),
-                        ElevatedButton(
-                          onPressed: _resetCounter,
+                          onPressed: context.read<AppData>().resetCounter,
                           child: Icon(Icons.settings_backup_restore_rounded),
                         ),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: _navigateCounter, 
-                      child: const Text('Ir'),
-                    ),
-                  ],
-                  
-                ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: _navigateCounter,
+                    child: const Text('Ir'),
+                  ),
+                ],
               ),
-              /*child: Column(
+            ),
+
+            /*child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SvgPicture.asset(
@@ -138,20 +191,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
                 
               ),*/
-              
-            
-            
           ),
         ),
       ),
     );
-  }
-
-  List<Widget> get botonesAbajo {
-    return [
-      TextButton(onPressed: _incrementCounter, child: Icon(Icons.exposure_plus_1)),
-      TextButton(onPressed: _decrementCounter, child: Icon(Icons.exposure_minus_1)),
-      TextButton(onPressed: _resetCounter, child: Icon(Icons.settings_backup_restore_rounded))
-    ];
   }
 }
