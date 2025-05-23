@@ -4,6 +4,8 @@ import 'package:application_laboratorio/pages/list_content.dart';
 import 'package:application_laboratorio/pages/about.dart';
 import 'package:application_laboratorio/provider/app_data.dart';
 import 'package:provider/provider.dart';
+import 'package:application_laboratorio/pages/preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -11,57 +13,59 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() {
-    print("Create state");
-    return _MyHomePageState();
-  }
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   //int _counter = 0;
-  _MyHomePageState() {
-    print("Constructor, Mounted: $mounted");
-  }
+  bool _isResetEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    print("initState(), Mounted: $mounted");
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isResetEnabled = prefs.getBool('isResetEnabled') ?? false;
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("didChangeDependencies(), Mounted: $mounted");
+    //print("didChangeDependencies(), Mounted: $mounted");
   }
 
   @override
   void setState(VoidCallback fn) {
-    print("setState()");
+    //print("setState()");
     super.setState(fn);
   }
 
   @override
   void didUpdateWidget(covariant MyHomePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("didUpdateWidget(), Mounted: $mounted");
+    //print("didUpdateWidget(), Mounted: $mounted");
   }
 
   @override
   void deactivate() {
-    print("deactivate(), Mounted: $mounted");
+    //print("deactivate(), Mounted: $mounted");
     super.deactivate();
   }
 
   @override
   void dispose() {
-    print("dispose(), Mounted: $mounted");
+    //print("dispose(), Mounted: $mounted");
     super.dispose();
   }
 
   @override
   void reassemble() {
-    print("reassemble(), Mounted: $mounted");
+    //print("reassemble(), Mounted: $mounted");
     super.reassemble();
   }
 
@@ -83,6 +87,31 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }*/
 
+  void _onItemTapped(int index) {
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ListContent()),
+      );
+    }
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PreferencesPage(title: 'Preferencias'),
+        ),
+      ).then((_) {
+        _loadPreferences();
+      });
+    }
+    if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const About()),
+      );
+    }
+  }
+
   void _navigateCounter() {
     if (context.read<AppData>().counter % 2 == 0) {
       Navigator.push(
@@ -99,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("build");
+    //print("build");
     //var logger = Logger();
     //logger.d("Logger is working!");
     String assetName = "assets/icons/check.svg";
@@ -161,11 +190,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: context.read<AppData>().decrementCounter,
                         child: Icon(Icons.exposure_minus_1),
                       ),
-                      if (context.watch<AppData>().enableReset)
-                        ElevatedButton(
-                          onPressed: context.read<AppData>().resetCounter,
-                          child: Icon(Icons.settings_backup_restore_rounded),
-                        ),
+                      ElevatedButton(
+                        onPressed:
+                            _isResetEnabled
+                                ? context.read<AppData>().resetCounter
+                                : null,
+                        child: Icon(Icons.settings_backup_restore_rounded),
+                      ),
                     ],
                   ),
                   ElevatedButton(
@@ -193,6 +224,17 @@ class _MyHomePageState extends State<MyHomePage> {
               ),*/
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Lista'),
+          BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Preferencias'),
+          BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Detalles'),
+        ],
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.green,
+        onTap: _onItemTapped,
       ),
     );
   }
