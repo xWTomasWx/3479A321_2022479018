@@ -26,11 +26,11 @@ class _PreferencesPageState extends State<PreferencesPage> {
     });
   }
 
-  @override
+  /*@override
   void dispose() {
     super.dispose();
     _savePreferences();
-  }
+  }*/
 
   Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -55,6 +55,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 setState(() {
                   _isResetEnabled = value;
                 });
+                _savePreferences();
               },
             ),
           ],

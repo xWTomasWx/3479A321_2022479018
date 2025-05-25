@@ -39,11 +39,11 @@ class About extends StatelessWidget {
                 ),
               ),
             ),
-            SwitchListTile(
+            /*SwitchListTile(
               title: const Text('Permitir reinicio'),
               value: context.watch<AppData>().enableReset,
               onChanged: (val) => context.read<AppData>().setResetEnabled(val),
-            ),
+            ),*/
             Text(
               'Sobre\nContador: ${context.watch<AppData>().counter}',
               style: TextStyle(fontSize: 30),

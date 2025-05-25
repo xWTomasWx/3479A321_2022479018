@@ -6,6 +6,7 @@ import 'package:application_laboratorio/provider/app_data.dart';
 import 'package:provider/provider.dart';
 import 'package:application_laboratorio/pages/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:application_laboratorio/pages/activities.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -97,14 +98,18 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index == 2) {
       Navigator.push(
         context,
+        MaterialPageRoute(builder: (context) => const ActivitiesPage()),
+      );
+    }
+    if (index == 3) {
+      Navigator.push(
+        context,
         MaterialPageRoute(
           builder: (context) => const PreferencesPage(title: 'Preferencias'),
         ),
-      ).then((_) {
-        _loadPreferences();
-      });
+      ).then((_) => _loadPreferences());
     }
-    if (index == 3) {
+    if (index == 4) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const About()),
@@ -226,10 +231,18 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Lista'),
-          BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Preferencias'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.format_list_numbered_rtl),
+            label: 'Actividades',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.build),
+            label: 'Preferencias',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Detalles'),
         ],
         unselectedItemColor: Colors.black,

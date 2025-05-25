@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:application_laboratorio/pages/home.dart';
 import 'package:application_laboratorio/provider/app_data.dart';
 import 'package:provider/provider.dart';
+import 'package:application_laboratorio/services/database_helper.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper().initializeDatabase();
   runApp(const MyApp());
 }
 
