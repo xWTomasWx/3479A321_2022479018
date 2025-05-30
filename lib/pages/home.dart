@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+//import 'package:flutter_svg/flutter_svg.dart';
 import 'package:application_laboratorio/pages/list_content.dart';
 import 'package:application_laboratorio/pages/about.dart';
 import 'package:application_laboratorio/provider/app_data.dart';
@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:application_laboratorio/pages/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:application_laboratorio/pages/activities.dart';
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -20,6 +21,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //int _counter = 0;
   bool _isResetEnabled = false;
+  String _url = "https://picsum.photos/250?image=1";
 
   @override
   void initState() {
@@ -131,12 +133,33 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> _getNewImage() async {
+    final newImageUrl =
+        'https://picsum.photos/250?image=${context.read<AppData>().counter}';
+    try {
+      final response = await http.head(Uri.parse(newImageUrl));
+      if (response.statusCode == 200) {
+        setState(() {
+          _url = newImageUrl;
+        });
+      } else {
+        setState(() {
+          _url = ''; // Clear the image URL
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _url = ''; // Clear the image URL
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //print("build");
     //var logger = Logger();
     //logger.d("Logger is working!");
-    String assetName = "assets/icons/check.svg";
+    //String assetName = "assets/icons/check.svg";
 
     return Scaffold(
       appBar: AppBar(
@@ -175,10 +198,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     'Usuario: ${context.watch<AppData>().username}',
                     style: TextStyle(fontSize: 20),
                   ),
-                  const Text(
+                  /*const Text(
                     'Flutter es un framework de código abierto creado por Google, utilizado para desarrollar aplicaciones multiplataforma (móviles, web, de escritorio e integradas) desde una única base de código. Este framework es conocido por su facilidad de desarrollo, rendimiento y capacidad de crear interfaces de usuario personalizadas y atractivas.',
-                  ),
-                  SvgPicture.asset(assetName, semanticsLabel: 'Icono'),
+                  ),*/
+                  //SvgPicture.asset(assetName, semanticsLabel: 'Icono'),
                   const Text('Has presionado el boton esta cantidad de veces:'),
                   Text(
                     '${context.watch<AppData>().counter}',
@@ -207,6 +230,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(
                     onPressed: _navigateCounter,
                     child: const Text('Ir'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _getNewImage,
+                    child: Text("Obtener imagen"),
+                  ),
+                  Image.network(
+                    _url.isNotEmpty ? _url : '',
+                    width: 250,
+                    height: 250,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Text(
+                          'Failed to load image',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
