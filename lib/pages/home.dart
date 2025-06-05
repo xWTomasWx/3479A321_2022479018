@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final newImageUrl =
         'https://picsum.photos/250?image=${context.read<AppData>().counter}';
     try {
-      final response = await http.head(Uri.parse(newImageUrl));
+      final response = await http.get(Uri.parse(newImageUrl));
       if (response.statusCode == 200) {
         setState(() {
           _url = newImageUrl;
@@ -227,6 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
+
                   ElevatedButton(
                     onPressed: _navigateCounter,
                     child: const Text('Ir'),
