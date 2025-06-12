@@ -1,6 +1,7 @@
+import 'package:application_laboratorio/pages/picture.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
-import 'package:application_laboratorio/pages/list_content.dart';
+//import 'package:application_laboratorio/pages/list_content.dart';
 import 'package:application_laboratorio/pages/about.dart';
 import 'package:application_laboratorio/provider/app_data.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,9 @@ import 'package:application_laboratorio/pages/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:application_laboratorio/pages/activities.dart';
 import 'package:http/http.dart' as http;
+import 'package:camera/camera.dart';
+import 'dart:io';
+import 'package:application_laboratorio/pages/gallery.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -22,11 +26,24 @@ class _MyHomePageState extends State<MyHomePage> {
   //int _counter = 0;
   bool _isResetEnabled = false;
   String _url = "https://picsum.photos/250?image=1";
+  String? _imagePath;
+  double tamanio = 320;
+
+  List<CameraDescription> cameras = [];
+  late CameraDescription firstCamera;
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
+    _loadCameras();
+  }
+
+  Future<void> _loadCameras() async {
+    cameras = await availableCameras();
+    setState(() {
+      firstCamera = cameras.first;
+    });
   }
 
   Future<void> _loadPreferences() async {
@@ -94,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ListContent()),
+        MaterialPageRoute(builder: (context) => const GalleryPage()),
       );
     }
     if (index == 2) {
@@ -119,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _navigateCounter() {
+  /*void _navigateCounter() {
     if (context.read<AppData>().counter % 2 == 0) {
       Navigator.push(
         context,
@@ -131,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
         MaterialPageRoute(builder: (context) => const About()),
       );
     }
-  }
+  }*/
 
   Future<void> _getNewImage() async {
     final newImageUrl =
@@ -141,15 +158,18 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         setState(() {
           _url = newImageUrl;
+          _imagePath = null;
         });
       } else {
         setState(() {
           _url = ''; // Clear the image URL
+          _imagePath = null;
         });
       }
     } catch (e) {
       setState(() {
         _url = ''; // Clear the image URL
+        _imagePath = null;
       });
     }
   }
@@ -166,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.greenAccent[400],
         title: Text(widget.title),
       ),
-      persistentFooterButtons: [
+      /*persistentFooterButtons: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -182,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(),
           ],
         ),
-      ],
+      ],*/
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -202,6 +222,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     'Flutter es un framework de código abierto creado por Google, utilizado para desarrollar aplicaciones multiplataforma (móviles, web, de escritorio e integradas) desde una única base de código. Este framework es conocido por su facilidad de desarrollo, rendimiento y capacidad de crear interfaces de usuario personalizadas y atractivas.',
                   ),*/
                   //SvgPicture.asset(assetName, semanticsLabel: 'Icono'),
+                  _imagePath != null
+                      ? Image.file(
+                        File(_imagePath!),
+                        width: tamanio,
+                        height: tamanio,
+                        fit: BoxFit.cover,
+                      )
+                      : Image.network(
+                        _url,
+                        width: tamanio,
+                        height: tamanio,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Text(
+                              'Failed to load image',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          );
+                        },
+                      ),
                   const Text('Has presionado el boton esta cantidad de veces:'),
                   Text(
                     '${context.watch<AppData>().counter}',
@@ -228,27 +269,30 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
 
-                  ElevatedButton(
+                  /*ElevatedButton(
                     onPressed: _navigateCounter,
                     child: const Text('Ir'),
-                  ),
+                  ),*/
                   ElevatedButton(
                     onPressed: _getNewImage,
-                    child: Text("Obtener imagen"),
+                    child: Text("Obtener imagen internet"),
                   ),
-                  Image.network(
-                    _url.isNotEmpty ? _url : '',
-                    width: 250,
-                    height: 250,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Center(
-                        child: Text(
-                          'Failed to load image',
-                          style: TextStyle(color: Colors.red),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final imagePath = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => PicturePage(camera: firstCamera),
                         ),
                       );
+                      if (imagePath != null) {
+                        setState(() {
+                          _imagePath = imagePath;
+                        });
+                      }
                     },
+                    child: Icon(Icons.camera_alt),
                   ),
                 ],
               ),
@@ -274,18 +318,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Lista'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.image), label: ''),
           BottomNavigationBarItem(
             icon: Icon(Icons.format_list_numbered_rtl),
-            label: 'Actividades',
+            label: '',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.build),
-            label: 'Preferencias',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Detalles'),
+          BottomNavigationBarItem(icon: Icon(Icons.build), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.info), label: ''),
         ],
         unselectedItemColor: Colors.black,
         selectedItemColor: Colors.green,
