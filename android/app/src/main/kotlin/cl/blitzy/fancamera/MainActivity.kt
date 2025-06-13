@@ -1,4 +1,4 @@
-package com.example.application_laboratorio
+package cl.blitzy.fancamera
 
 import io.flutter.embedding.android.FlutterActivity
 

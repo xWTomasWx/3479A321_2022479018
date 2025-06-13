@@ -41,7 +41,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.greenAccent[400],
+        //backgroundColor: Colors.greenAccent[400],
         title: Text(widget.title),
       ),
       body: Center(

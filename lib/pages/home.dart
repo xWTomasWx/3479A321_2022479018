@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 //import 'package:application_laboratorio/pages/list_content.dart';
 import 'package:application_laboratorio/pages/about.dart';
-import 'package:application_laboratorio/provider/app_data.dart';
+import 'package:application_laboratorio/data/services/app_data.dart';
 import 'package:provider/provider.dart';
 import 'package:application_laboratorio/pages/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -182,10 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //String assetName = "assets/icons/check.svg";
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.greenAccent[400],
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       /*persistentFooterButtons: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -208,7 +205,6 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.all(20),
           child: Card(
             elevation: 8,
-            color: Colors.greenAccent,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -330,8 +326,6 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.build), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.info), label: ''),
         ],
-        unselectedItemColor: Colors.black,
-        selectedItemColor: Colors.green,
         onTap: _onItemTapped,
       ),
     );
